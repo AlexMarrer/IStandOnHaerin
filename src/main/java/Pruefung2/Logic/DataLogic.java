@@ -2,6 +2,7 @@ package Pruefung2.Logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -14,6 +15,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 
 import Pruefung2.Data;
@@ -85,7 +87,25 @@ public class DataLogic implements IDataLogic {
 		}
 	}
 	
-	@Override
+	@Override 
+	public ArrayList<Data> getSolrData() throws SolrServerException, IOException {
+		SolrQuery query = new SolrQuery();
+		query.setQuery("*:*");
+		QueryResponse response = solrClient.query(query);
+		SolrDocumentList documents = response.getResults();
+		ArrayList<Data> dataList = new ArrayList<Data>();
+		
+		for (SolrDocument doc : documents) {
+            int id = Integer.parseInt((String) doc.getFieldValue("id"));
+            String title = (String) doc.getFieldValue("title");
+            String text = (String) doc.getFieldValue("text");
+
+            dataList.add(new Data(id, title, text));
+		}
+		return dataList;
+	}
+	
+	@Override 
 	public void closeSolr() throws IOException {
 		solrClient.close();		
 	}
