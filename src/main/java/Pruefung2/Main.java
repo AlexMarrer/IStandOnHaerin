@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.solr.client.solrj.SolrClient;
@@ -26,7 +29,7 @@ public class Main {
 
 	private final static SolrClient solrClient = new HttpSolrClient.Builder(solrURL).build();
 
-	public static void main(String[] args) throws SolrServerException, IOException {
+	public static void main(String[] args) throws SolrServerException, IOException, InterruptedException {
 		long startTime = System.nanoTime();
 
 		createData(getWords());
@@ -49,6 +52,8 @@ public class Main {
 
 		SolrQuery query = new SolrQuery();
 		query.setQuery("*:*");
+		QueryResponse responseCount = solrClient.query(query);
+		System.out.println(responseCount._size());
 		query.setRows(5);
 
 		QueryResponse response = solrClient.query(query);
@@ -57,34 +62,49 @@ public class Main {
 		}
 	}
 
-	private static void createData(List<String> words) throws SolrServerException, IOException {
-		Random randomWord = new Random();
-		int oldInt = 10;
-		ArrayList<SolrInputDocument> documents = new ArrayList<SolrInputDocument>();
-		for (int i = 0; i < 10; i++) {
-			StringBuilder text = new StringBuilder();
-			StringBuilder title = new StringBuilder();
-			int randomTextLength = randomWord.nextInt(501) + 1000;
-			for (int j = 0; j < randomTextLength; j++) {
-				String word = words.get(randomWord.nextInt(words.size()));
-				text.append(word).append(" ");
-				if (j < 5) {
-					title.append(word).append(" ");
-				}
-			}
-			Data data = new Data(i, title.toString(), text.toString());
-			SolrInputDocument document = new SolrInputDocument();
-			document.addField("id", data.getId());
-			document.addField("title", data.getTitle());
-			document.addField("text", data.getText());
+	private static void createData(List<String> words) throws InterruptedException {
+	    Random randomWord = new Random();
+	    int oldInt = 10000; // Miau
+	    int totalDocs = 1000000;
+	    ExecutorService threads = Executors.newFixedThreadPool(8);
 
-			documents.add(document);
-			if ((i + 1) % oldInt == 0 || i == 99999) {
-				solrClient.add(documents);
-				solrClient.commit();
-				documents.clear();
-			}
-		}
+	    for (int i = 0; i < totalDocs; i += oldInt) {
+	        final int start = i;
+	        final int end = Math.min(i + oldInt, totalDocs);
+
+	        threads.submit(() -> {
+	            ArrayList<SolrInputDocument> threadDocuments = new ArrayList<>();
+	            for (int index = start; index < end; index++) {
+	                StringBuilder text = new StringBuilder();
+	                StringBuilder title = new StringBuilder();
+	                int randomTextLength = randomWord.nextInt(501) + 1000;
+	                for (int j = 0; j < randomTextLength; j++) {
+	                    String word = words.get(randomWord.nextInt(words.size()));
+	                    text.append(word).append(" ");
+	                    if (j < 5) {
+	                        title.append(word).append(" ");
+	                    }
+	                }
+
+	                Data data = new Data(index, title.toString(), text.toString());
+	                SolrInputDocument document = new SolrInputDocument();
+	                document.addField("id", data.getId());
+	                document.addField("title", data.getTitle());
+	                document.addField("text", data.getText());
+
+	                threadDocuments.add(document);
+	            }
+
+	            try {
+	                solrClient.add(threadDocuments);
+	                solrClient.commit();
+	            } catch (SolrServerException | IOException e) {
+	                e.printStackTrace();
+	            }
+	        });
+	    }
+
+	    threads.shutdown();
+	    threads.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 	}
-
 }
