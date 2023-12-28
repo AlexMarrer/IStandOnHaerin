@@ -69,14 +69,14 @@ public class Main {
 				if (j < 5) {
 	                title.append(word).append(" ");
 				}
-				Data data = new Data(i, title.toString(), text.toString());
-				SolrInputDocument document = new SolrInputDocument();
-				document.addField("id", data.getId());
-				document.addField("title", data.getTitle());
-				document.addField("text", data.getText());
-
-				documents.add(document);
 			}
+			Data data = new Data(i, title.toString(), text.toString());
+			SolrInputDocument document = new SolrInputDocument();
+			document.addField("id", data.getId());
+			document.addField("title", data.getTitle());
+			document.addField("text", data.getText());
+
+			documents.add(document);
 		}
 		
 		solrClient.add(documents);
