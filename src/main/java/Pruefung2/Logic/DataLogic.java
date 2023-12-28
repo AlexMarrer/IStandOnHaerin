@@ -2,7 +2,6 @@ package Pruefung2.Logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -26,6 +25,16 @@ public class DataLogic implements IDataLogic {
 	private final static String solrURL = "http://localhost:8983/solr/SolrTestCore";
 
 	private final static SolrClient solrClient = new HttpSolrClient.Builder(solrURL).build();
+	
+	@Override
+	public void deleteAllDocuments() {
+	    try {
+	        solrClient.deleteByQuery("*:*");
+	        solrClient.commit(); 
+	    } catch (SolrServerException | IOException e) {
+	        e.printStackTrace();
+	    }
+	}
 	
 	@Override
 	public void createData(List<String> words) throws InterruptedException {

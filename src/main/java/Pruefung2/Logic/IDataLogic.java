@@ -10,6 +10,8 @@ import Pruefung2.Data;
 
 public interface IDataLogic {
 
+	void deleteAllDocuments();
+	
 	void createData(List<String> words) throws InterruptedException;
 	
 	void getData() throws SolrServerException, IOException;

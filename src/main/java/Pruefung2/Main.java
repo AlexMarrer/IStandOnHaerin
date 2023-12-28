@@ -21,6 +21,7 @@ public class Main {
 		long startTime = System.nanoTime();
 		IDataLogic dataLogic = new DataLogic();
 		
+		dataLogic.deleteAllDocuments();
 		dataLogic.createData(getWords());
 		dataLogic.getData();
 
@@ -34,6 +35,8 @@ public class Main {
 	}
 	
 	private static List<String> getWords() throws IOException {
-		return Files.lines(path).flatMap(line -> Arrays.stream(line.split("\\s+"))).collect(Collectors.toList());
+		return Files.lines(path)
+				.flatMap(line -> Arrays.stream(line.split("\\s+")))
+				.collect(Collectors.toList());
 	}
 }
