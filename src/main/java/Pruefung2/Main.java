@@ -24,22 +24,26 @@ public class Main {
 	private final static SolrClient solrClient = new HttpSolrClient.Builder(solrURL).build();
 
 	public static void main(String[] args) throws SolrServerException, IOException {
-		ArrayList<String> words = new ArrayList<>();
-
-		try {
-			Scanner myScanner = new Scanner(wordList);
-			while (myScanner.hasNext()) {
-				words.add(myScanner.next());
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		createData(words);
+	
+		createData(getWords());
 		getData();
 		
 		solrClient.close();
 	}
 
+	private static ArrayList<String> getWords() throws FileNotFoundException {
+		
+		ArrayList<String> words = new ArrayList<>();
+		
+		try (Scanner myScanner = new Scanner(wordList)) {
+			while (myScanner.hasNext()) {
+				words.add(myScanner.next());
+			}
+		}
+		
+		return words;
+	}
+	
 	private static void getData() throws SolrServerException, IOException {
 
 		SolrQuery query = new SolrQuery();
