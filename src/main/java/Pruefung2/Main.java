@@ -58,6 +58,7 @@ public class Main {
 
 	private static void createData(ArrayList<String> words) throws SolrServerException, IOException {
 		Random randomWord = new Random();
+		ArrayList<SolrInputDocument> documents = new ArrayList<SolrInputDocument>();
 		for (int i = 0; i < 10; i++) {
 	        StringBuilder text = new StringBuilder();
 	        StringBuilder title = new StringBuilder();
@@ -74,9 +75,11 @@ public class Main {
 				document.addField("title", data.getTitle());
 				document.addField("text", data.getText());
 
-				solrClient.add(document);
+				documents.add(document);
 			}
 		}
+		
+		solrClient.add(documents);
 		solrClient.commit();
 	}
 
