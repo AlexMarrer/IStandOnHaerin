@@ -41,4 +41,5 @@ public class Data {
 	public void getInfo() {
 		System.out.println("Id: " + id + "\nTitle: " + title + "\ntext: " + text);
 	}
+	
 }

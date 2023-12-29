@@ -12,11 +12,13 @@ public interface IDataLogic {
 
 	void deleteAllDocuments();
 	
-	void createData(List<String> words) throws InterruptedException;
+	void createData(List<String> words, int oldInt, int totalDocs) throws InterruptedException;
 	
 	void getData() throws SolrServerException, IOException;
 
 	ArrayList<Data> getSolrData() throws SolrServerException, IOException;
 	
 	void closeSolr() throws IOException;
+
+	void timeEnd(long startTime);
 }

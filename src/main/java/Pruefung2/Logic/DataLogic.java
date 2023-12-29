@@ -37,10 +37,8 @@ public class DataLogic implements IDataLogic {
 	}
 	
 	@Override
-	public void createData(List<String> words) throws InterruptedException {
+	public void createData(List<String> words, int oldInt, int totalDocs) throws InterruptedException {
 	    Random randomWord = new Random();
-	    int oldInt = 10000; // Miau
-	    int totalDocs = 1000000;
 	    ExecutorService threads = Executors.newFixedThreadPool(8);
 
 	    for (int i = 0; i < totalDocs; i += oldInt) {
@@ -100,14 +98,15 @@ public class DataLogic implements IDataLogic {
 	public ArrayList<Data> getSolrData() throws SolrServerException, IOException {
 		SolrQuery query = new SolrQuery();
 		query.setQuery("*:*");
+		query.setRows(10000);
 		QueryResponse response = solrClient.query(query);
 		SolrDocumentList documents = response.getResults();
 		ArrayList<Data> dataList = new ArrayList<Data>();
 		
 		for (SolrDocument doc : documents) {
             int id = Integer.parseInt((String) doc.getFieldValue("id"));
-            String title = (String) doc.getFieldValue("title");
-            String text = (String) doc.getFieldValue("text");
+            String title = doc.getFieldValue("title").toString();
+            String text = doc.getFieldValue("text").toString();
 
             dataList.add(new Data(id, title, text));
 		}
@@ -117,5 +116,14 @@ public class DataLogic implements IDataLogic {
 	@Override 
 	public void closeSolr() throws IOException {
 		solrClient.close();		
+	}
+	
+	@Override
+	public void timeEnd(long startTime) {
+		long endTime = System.nanoTime();
+		long durationInNano = (endTime - startTime);
+		long durationInMillis = durationInNano / 1_000_000;
+		long durationInSek = durationInNano / 1_000_000_000;
+		System.out.println("Gesamtdauer: " + durationInSek + "s" + "\nGesamtdauer: " + durationInMillis + "milli");
 	}
 }

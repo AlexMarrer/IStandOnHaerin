@@ -20,16 +20,14 @@ public class Main {
 	public static void main(String[] args) throws SolrServerException, IOException, InterruptedException {
 		long startTime = System.nanoTime();
 		IDataLogic dataLogic = new DataLogic();
+	    int oldInt = 10000; // Miau
+	    int totalDocs = 100000;
 		
 		dataLogic.deleteAllDocuments();
-		dataLogic.createData(getWords());
+		dataLogic.createData(getWords(), oldInt, totalDocs);
 		dataLogic.getData();
 
-		long endTime = System.nanoTime();
-		long durationInNano = (endTime - startTime);
-		long durationInMillis = durationInNano / 1_000_000;
-		long durationInSek = durationInNano / 1_000_000_000;
-		System.out.println("Gesamtdauer: " + durationInSek + "s" + "\nGesamtdauer: " + durationInMillis + "milli");
+		dataLogic.timeEnd(startTime);
 
 		dataLogic.closeSolr();
 	}
