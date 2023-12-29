@@ -21,7 +21,7 @@ public class Main {
 		long startTime = System.nanoTime();
 		IDataLogic dataLogic = new DataLogic();
 	    int oldInt = 10000; // Miau
-	    int totalDocs = 100000;
+	    int totalDocs = 1000000;
 		
 		dataLogic.deleteAllDocuments();
 		dataLogic.createData(getWords(), oldInt, totalDocs);

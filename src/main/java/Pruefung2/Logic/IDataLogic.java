@@ -15,7 +15,9 @@ public interface IDataLogic {
 	void createData(List<String> words, int oldInt, int totalDocs) throws InterruptedException;
 	
 	void getData() throws SolrServerException, IOException;
-
+	
+	ArrayList<Data> getSpecificAmountOfData(int amountOfData) throws SolrServerException, IOException;
+	
 	ArrayList<Data> getSolrData() throws SolrServerException, IOException;
 	
 	void closeSolr() throws IOException;

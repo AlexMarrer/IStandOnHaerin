@@ -8,4 +8,6 @@ public interface IVerifyLogic {
 // HOHO HO MERYY CHRISTMAS
 	
 	Boolean verifyTitle(ArrayList<Data> solrData);
+
+	boolean verifyAmountOfData(ArrayList<Data> specificAmountOfData, int specificAmount);
 }

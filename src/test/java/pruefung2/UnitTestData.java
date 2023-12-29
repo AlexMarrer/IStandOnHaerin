@@ -60,6 +60,18 @@ public class UnitTestData {
 
 		assertTrue(verifyLogic.verifyTitle(dataLogic.getSolrData()));
 	}
+	
+	@Test
+	public void getSpecificNumbersOfDocs() throws InterruptedException, IOException, SolrServerException {
+		int oldInt = 1000; // Miau
+		int totalDocs = 10000;
+		int specificAmount = 10;
+
+		dataLogic.deleteAllDocuments();
+		dataLogic.createData(getWords(), oldInt, totalDocs);
+		
+		assertTrue(verifyLogic.verifyAmountOfData(dataLogic.getSpecificAmountOfData(specificAmount), specificAmount));
+	}
 
 	private static List<String> getWords() throws IOException {
 		return Files.lines(path).flatMap(line -> Arrays.stream(line.split("\\s+"))).collect(Collectors.toList());

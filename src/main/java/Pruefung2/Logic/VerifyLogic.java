@@ -21,4 +21,11 @@ public class VerifyLogic implements IVerifyLogic {
 		}
 		return true;
 	}
+	
+	@Override
+	public boolean verifyAmountOfData(ArrayList<Data> specificAmountOfData, int specificAmount) {
+		if(specificAmountOfData.size() != specificAmount)
+			return false;		
+		return true;
+	}
 }

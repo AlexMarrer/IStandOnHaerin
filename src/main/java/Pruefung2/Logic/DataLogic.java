@@ -94,6 +94,25 @@ public class DataLogic implements IDataLogic {
 		}
 	}
 	
+	@Override
+	public ArrayList<Data> getSpecificAmountOfData(int amountOfData) throws SolrServerException, IOException {
+		SolrQuery query = new SolrQuery();
+		query.setQuery("*:*");
+		query.setRows(amountOfData);
+		QueryResponse response = solrClient.query(query);
+		SolrDocumentList documents = response.getResults();
+		ArrayList<Data> dataList = new ArrayList<Data>();
+		
+		for (SolrDocument doc : documents) {
+            int id = Integer.parseInt((String) doc.getFieldValue("id"));
+            String title = doc.getFieldValue("title").toString();
+            String text = doc.getFieldValue("text").toString();
+
+            dataList.add(new Data(id, title, text));
+		}
+		return dataList;
+	}
+	
 	@Override 
 	public ArrayList<Data> getSolrData() throws SolrServerException, IOException {
 		SolrQuery query = new SolrQuery();
