@@ -63,6 +63,7 @@ public class DataLogic implements IDataLogic {
 	                            words.set(randomWord.nextInt(words.size()), 
 	                                      words.get(randomWord.nextInt(words.size())).substring(0, 1).toUpperCase() + 
 	                                      words.get(randomWord.nextInt(words.size())).substring(1));
+	                            j++;
 	                        }
 	                    } else {
 	                        text.append(" ");
