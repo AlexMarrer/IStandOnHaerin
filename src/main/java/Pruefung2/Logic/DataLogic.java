@@ -53,7 +53,21 @@ public class DataLogic implements IDataLogic {
 	                int randomTextLength = randomWord.nextInt(501) + 1000;
 	                for (int j = 0; j < randomTextLength; j++) {
 	                    String word = words.get(randomWord.nextInt(words.size()));
-	                    text.append(word).append(" ");
+	                    text.append(word);
+
+	                    if (randomWord.nextInt(10) == 0) { 
+	                        text.append(", ");
+	                    } else if (randomWord.nextInt(15) == 0) { 
+	                        text.append(". ");
+	                        if (j + 1 < randomTextLength) {
+	                            words.set(randomWord.nextInt(words.size()), 
+	                                      words.get(randomWord.nextInt(words.size())).substring(0, 1).toUpperCase() + 
+	                                      words.get(randomWord.nextInt(words.size())).substring(1));
+	                        }
+	                    } else {
+	                        text.append(" ");
+	                    }
+
 	                    if (j < 5) {
 	                        title.append(word).append(" ");
 	                    }
