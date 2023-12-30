@@ -55,23 +55,29 @@ public class DataLogic implements IDataLogic {
 	                    String word = words.get(randomWord.nextInt(words.size()));
 	                    text.append(word);
 
+	                    if (j < 5) {
+	                        title.append(word).append(" ");
+	                    }
+	                    
 	                    if (randomWord.nextInt(10) == 0) { 
 	                        text.append(", ");
 	                    } else if (randomWord.nextInt(15) == 0) { 
 	                        text.append(". ");
 	                        if (j + 1 < randomTextLength) {
-	                            words.set(randomWord.nextInt(words.size()), 
-	                                      words.get(randomWord.nextInt(words.size())).substring(0, 1).toUpperCase() + 
-	                                      words.get(randomWord.nextInt(words.size())).substring(1));
+	                        	int wordIndex = randomWord.nextInt(words.size());
+	                        	String selectedWord = words.get(wordIndex);
+	                        	selectedWord = selectedWord.substring(0, 1).toUpperCase() + 
+	                        	          selectedWord.substring(1);
+	                        	text.append(selectedWord).append(" ");
+	    	                    if (j < 5) {
+	    	                        title.append(selectedWord).append(" ");
+	    	                    }
 	                            j++;
 	                        }
 	                    } else {
 	                        text.append(" ");
 	                    }
-
-	                    if (j < 5) {
-	                        title.append(word).append(" ");
-	                    }
+	                    
 	                }
 
 	                Data data = new Data(index, title.toString(), text.toString());

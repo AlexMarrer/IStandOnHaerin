@@ -11,9 +11,11 @@ public class VerifyLogic implements IVerifyLogic {
 		
 		for (Data data : solrData) {
 			String[] textArray = data.getText().split("\\s+", 6);
-			String[] titleArray = data.getTitle().split("\\s+", 5);
+			String[] titleArray = data.getTitle().split("\\s+", 6);
 			titleArray[titleArray.length-1] = titleArray[titleArray.length-1].replaceAll("\\]$", "").trim();
-			for(int i = 0; i < titleArray.length; i++) {
+			for(int i = 0; i < titleArray.length -1; i++) {
+				 textArray[i] = textArray[i].replace(",", "").replace(".", "");
+				 titleArray[i] = titleArray[i].replace(",", "").replace(".", "");
 				if(!titleArray[i].equals(textArray[i])) {
 					return false;
 				}
